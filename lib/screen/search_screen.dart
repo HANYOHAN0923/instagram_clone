@@ -13,7 +13,53 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(children: <Widget>[
+      body: Column(
+        children: <Widget>[
+          // Search TextField
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 60,
+              bottom: 5,
+            ),
+            child: Container(
+              width: double.infinity,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Center(
+                child: TextField(
+                  decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          /* Clear the search field */
+                        },
+                      ),
+                      hintText: 'Search...',
+                      border: InputBorder.none),
+                ),
+              ),
+            ),
+          ),
+          // MasonryGridView
+          MediaQuery.removePadding(
+            // https://api.flutter.dev/flutter/widgets/MediaQuery/MediaQuery.removePadding.html
+            context: context,
+            removeTop: true,
+            child: const Expanded(
+              child: SearchView(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/*
         Container(
           color: Colors.white,
           child: Padding(
@@ -41,8 +87,4 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
         ),
-        const Expanded(child: SearchView()),
-      ]),
-    );
-  }
-}
+*/

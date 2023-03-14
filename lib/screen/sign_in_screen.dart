@@ -1,60 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/model/firebase_auth_handling.dart';
-import 'package:flutter_application_1/screen/sign_in_screen.dart';
-import 'package:flutter_application_1/widget/account_field_widget.dart';
+import 'package:instagram_clone/main_page.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+import '../common/custome_icon.dart';
+import '../model/firebase_auth_handling.dart';
+import '../widget/account_field_widget.dart';
+import 'sign_up_screen.dart';
+
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
-  final TextEditingController _confirmPasswordTextController =
-      TextEditingController();
   bool toggle = true;
 
-  @override
-  void dispose() {
-    _emailTextController.dispose();
-    _passwordTextController.dispose();
-    _confirmPasswordTextController.dispose();
-    super.dispose();
-  }
-
-  bool isConfirmed() {
-    if (_passwordTextController.text.trim() ==
-        _confirmPasswordTextController.text.trim()) {
-      return true;
-    }
-    return false;
-  }
-
-  Future signUp() async {
-    if (!isConfirmed()) {
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Caution!"),
-            content: const Text(
-              "The password doesn't match. Please keep checking back.",
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("Okay"),
-              ),
-            ],
-          );
-        },
+  Future signIn() async {
+    /*
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailTextController.text.trim(),
+        password: _passwordTextController.text.trim(),
       );
+    } on FirebaseAuthException catch (e) {
+      print('Failed with error code: ${e.code}');
+      print(e.message);
     }
-    final status = await FirebaseAuthHelper().createAccount(
+    */
+    final status = await FirebaseAuthHelper().login(
       email: _emailTextController.text.trim(),
       pass: _passwordTextController.text.trim(),
     );
@@ -63,7 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const SignInScreen(),
+          builder: (context) => const MainPage(),
         ),
       );
     } else {
@@ -80,7 +56,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             actions: <Widget>[
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 child: const Text("Okay"),
               ),
             ],
@@ -145,47 +123,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 5,
-            ),
-          ),
-          // confirmPasswordTextField
-          SizedBox(
-            width: 380,
-            child: TextField(
-              controller: _confirmPasswordTextController,
-              obscureText: toggle,
-              enableSuggestions: true,
-              autocorrect: true,
-              cursorColor: Colors.white,
-              keyboardType: TextInputType.visiblePassword,
-              decoration: InputDecoration(
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      toggle = !toggle;
-                    });
-                  },
-                  icon: toggle
-                      ? const Icon(
-                          Icons.remove_red_eye,
-                        )
-                      : const Icon(
-                          Icons.remove_red_eye_outlined,
-                        ),
-                ),
-                labelText: "confirm password",
-                labelStyle: TextStyle(
-                  color: Colors.black.withOpacity(0.5),
-                ),
-                filled: true,
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                fillColor: Colors.white.withOpacity(0.3),
-                border: const OutlineInputBorder(),
-              ),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.only(top: 20, bottom: 40),
             child: Row(
@@ -207,10 +144,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ],
             ),
           ),
-          signButton(
-            "Sign Up",
-            signUp,
-          ),
+          signButton("Sign In", signIn),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 40),
             child: Text(
@@ -223,14 +157,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           SizedBox(
             width: 200,
-            child: InkWell(
+            child: GestureDetector(
               onTap: () {},
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Icon(Icons.abc),
+                  Icon(
+                    CustomIcons.facebook_squared,
+                    color: Colors.blue,
+                  ),
                   Text(
-                    'Log in with Facebook',
+                    ' Log in with Facebook',
                     style: TextStyle(
                       color: Colors.blue,
                       fontSize: 15,
@@ -246,7 +183,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Are you alreaady have an account?",
+                  "Don't have an account?",
                   style: TextStyle(
                     color: Colors.black.withOpacity(0.5),
                   ),
@@ -259,12 +196,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SignInScreen(),
+                        builder: (context) => const SignUpScreen(),
                       ),
                     );
                   },
                   child: const Text(
-                    'Sign In.',
+                    'Sign Up.',
                     style: TextStyle(
                       color: Colors.blueAccent,
                     ),

@@ -7,11 +7,13 @@ class SearchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 3.0,
+      ),
       child: MasonryGridView.builder(
         itemCount: 8,
         gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+          crossAxisCount: 3,
         ),
         itemBuilder: (context, index) => Padding(
           padding: const EdgeInsets.all(2.0),
